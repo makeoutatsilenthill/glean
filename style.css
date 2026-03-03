@@ -1,40 +1,17 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #fefefe;
   margin: 0;
   padding: 0;
-}
-
-header {
-  background-color: #ff6f61;
-  color: white;
-  padding: 20px;
-  text-align: center;
-}
-
-#feed {
+  height: 100vh;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  padding: 20px;
+  background-color: #8ace00; /* brat green inspired neon green */ 
 }
 
-.post {
-  background-color: white;
-  width: 90%;
-  max-width: 400px;
-  margin: 10px 0;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  overflow: hidden;
-}
-
-.post img {
-  width: 100%;
-  display: block;
-}
-
-.post p {
-  padding: 10px;
-  margin: 0;
+.center-text {
+  font-size: 72px;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  color: #000000; /* black text */
+  text-align: center;
 }
