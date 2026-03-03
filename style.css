@@ -55,7 +55,7 @@ body {
 
 /* --- New class for subpage titles --- */
 .page-title {
-  font-size: 36px; /* smaller than homepage */
+  font-size: 48px; /* smaller than homepage */
   font-family: Arial, sans-serif;
   font-weight: bold;
   color: #000;
