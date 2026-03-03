@@ -24,6 +24,7 @@
   color: #000;
   margin: 5px 0;
   font-weight: bold;
+  font-family: Arial, sans-serif; /* match your titles */
 }
 
 .dropdown-menu a:hover {
