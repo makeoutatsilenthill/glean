@@ -1,3 +1,25 @@
+/* --- Menu styles --- */
+header {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: flex-end; /* aligns menu to top-right */
+  box-sizing: border-box;
+}
+
+.menu a {
+  text-decoration: none;
+  color: #000000; /* black menu text */
+  margin-left: 20px;
+  font-weight: bold;
+  font-family: Arial, sans-serif;
+}
+
+.menu a:hover {
+  text-decoration: underline;
+}
+
+/* --- Existing body + center-text styles --- */
 body {
   margin: 0;
   padding: 0;
@@ -5,7 +27,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #36FF17;
+  background-color: #36FF17; /* your neon green */
 }
 
 .center-text {
