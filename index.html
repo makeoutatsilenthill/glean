@@ -32,6 +32,9 @@
 
     // ---- Music ----
     const music = document.getElementById("bgMusic");
+    
+    // Try to start immediately
+music.play().catch(() => {});
     const musicStateKey = "musicPlaying";
 
     // Always default to ON if not explicitly turned off
