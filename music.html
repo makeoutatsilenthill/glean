@@ -25,54 +25,67 @@
   <audio id="bgMusic" src="20200229-2.mp3" loop></audio>
 
   <script>
-const music = document.getElementById("bgMusic");
-const button = document.getElementById("musicButton");
+    // ----- Burger menu -----
+    function toggleMenu() {
+      const menu = document.getElementById('dropdownMenu');
+      menu.classList.toggle('show');
+    }
 
-// Default to playing
-if (localStorage.getItem("musicPlaying") === null) {
-  localStorage.setItem("musicPlaying", "true");
-}
+    // ----- Music player -----
+    const music = document.getElementById("bgMusic");
+    const button = document.getElementById("musicButton");
 
-// Restore playback time
-music.currentTime = localStorage.getItem("musicTime") || 0;
+    // Default state = playing
+    if (localStorage.getItem("musicPlaying") === null) {
+      localStorage.setItem("musicPlaying", "true");
+    }
 
-function updateButton() {
-  if (localStorage.getItem("musicPlaying") === "true") {
-    button.textContent = ":)";
-  } else {
-    button.textContent = ":(";
-  }
-}
+    // Restore time
+    music.currentTime = localStorage.getItem("musicTime") || 0;
 
-function toggleMusic() {
-  if (music.paused) {
-    music.play().catch(() => {});
-    localStorage.setItem("musicPlaying", "true");
-  } else {
-    music.pause();
-    localStorage.setItem("musicPlaying", "false");
-  }
-  updateButton();
-}
+    // Update button emoji
+    function updateButton() {
+      if (localStorage.getItem("musicPlaying") === "true") {
+        button.textContent = ":)";
+      } else {
+        button.textContent = ":(";
+      }
+    }
 
-button.addEventListener("click", toggleMusic);
+    // Toggle music
+    function toggleMusic() {
+      if (music.paused) {
+        music.play().catch(() => {}); // autoplay might fail on first visit
+        localStorage.setItem("musicPlaying", "true");
+      } else {
+        music.pause();
+        localStorage.setItem("musicPlaying", "false");
+      }
+      updateButton();
+    }
 
-// This ensures first click anywhere starts the audio
-document.addEventListener("click", function startOnce() {
-  if (localStorage.getItem("musicPlaying") === "true" && music.paused) {
-    music.play().catch(() => {});
-  }
-  document.removeEventListener("click", startOnce);
-});
+    button.addEventListener("click", toggleMusic);
 
-// Save position on unload
-window.addEventListener("beforeunload", () => {
-  localStorage.setItem("musicTime", music.currentTime);
-});
+    // Try to play if supposed to
+    if (localStorage.getItem("musicPlaying") === "true") {
+      music.play().catch(() => {}); // may fail due to browser restrictions
+    }
 
-// Set button state
-updateButton();
-</script>
+    updateButton();
+
+    // Save playback time when leaving page
+    window.addEventListener("beforeunload", () => {
+      localStorage.setItem("musicTime", music.currentTime);
+    });
+
+    // Enable playback on first interaction (needed for Safari/iOS)
+    document.addEventListener("click", function enableAudio() {
+      if (localStorage.getItem("musicPlaying") === "true") {
+        music.play().catch(() => {});
+      }
+      document.removeEventListener("click", enableAudio);
+    });
+  </script>
 
 </body>
 </html>
