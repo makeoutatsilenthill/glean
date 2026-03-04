@@ -115,9 +115,10 @@ if (localStorage.getItem(musicStateKey) !== "false") {
 
     // Initial page
     loadPage("home");
-    if (localStorage.getItem(musicStateKey) === "true") {
-      playMusicIfAllowed();
-    }
+
+if (localStorage.getItem(musicStateKey) === "true") {
+  playMusicIfAllowed();
+}
   </script>
 </body>
 </html>
