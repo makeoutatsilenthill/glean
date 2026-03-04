@@ -1,60 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>music - glean</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+<div class="page-title" id="musicButton" onclick="toggleMusic()">:(</div>
 
-  <div class="burger-menu" onclick="toggleMenu()">☰</div>
-  <div class="dropdown-menu" id="dropdownMenu">
-    <a href="index.html">home</a>
-    <a href="meditations.html">meditations</a>
-    <a href="endeavors.html">endeavors</a>
-    <a href="science.html">science</a>
-    <a href="music.html">music</a>
-  </div>
+<audio id="bgMusic" src="20200229-2.mp3" loop></audio>
 
-  <div class="page-title" id="musicButton" onclick="toggleMusic()">☹</div>
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById('dropdownMenu');
+    menu.classList.toggle('show');
+  }
 
-  <audio id="bgMusic" src="music.mp3" loop></audio>
+  const music = document.getElementById("bgMusic");
+  const button = document.getElementById("musicButton");
 
-  <script>
-    function toggleMenu() {
-      const menu = document.getElementById('dropdownMenu');
-      menu.classList.toggle('show');
-    }
+  if (localStorage.getItem("musicPlaying") === null) {
+    localStorage.setItem("musicPlaying", "true");
+  }
 
-    const music = document.getElementById("bgMusic");
-    const button = document.getElementById("musicButton");
+  music.currentTime = localStorage.getItem("musicTime") || 0;
 
-    // Restore time
-    music.currentTime = localStorage.getItem("musicTime") || 0;
-
-    // Resume if playing
+  function updateButton() {
     if (localStorage.getItem("musicPlaying") === "true") {
-      music.play();
-      button.textContent = "😊";
+      button.textContent = ":)";
+    } else {
+      button.textContent = ":(";
     }
+  }
 
-    function toggleMusic() {
-      if (music.paused) {
-        music.play();
-        localStorage.setItem("musicPlaying", "true");
-        button.textContent = "😊";
-      } else {
-        music.pause();
-        localStorage.setItem("musicPlaying", "false");
-        button.textContent = "☹";
-      }
+  function toggleMusic() {
+    if (localStorage.getItem("musicPlaying") === "true") {
+      music.pause();
+      localStorage.setItem("musicPlaying", "false");
+    } else {
+      music.play().catch(() => {});
+      localStorage.setItem("musicPlaying", "true");
     }
+    updateButton();
+  }
 
-    window.addEventListener("beforeunload", () => {
-      localStorage.setItem("musicTime", music.currentTime);
-    });
-  </script>
+  // Try autoplay
+  if (localStorage.getItem("musicPlaying") === "true") {
+    music.play().catch(() => {});
+  }
 
-</body>
-</html>
+  updateButton();
+
+  window.addEventListener("beforeunload", () => {
+    localStorage.setItem("musicTime", music.currentTime);
+  });
+</script>
