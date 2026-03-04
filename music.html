@@ -25,63 +25,54 @@
   <audio id="bgMusic" src="20200229-2.mp3" loop></audio>
 
   <script>
-    // Burger menu
-    function toggleMenu() {
-      const menu = document.getElementById('dropdownMenu');
-      menu.classList.toggle('show');
-    }
+const music = document.getElementById("bgMusic");
+const button = document.getElementById("musicButton");
 
-    const music = document.getElementById("bgMusic");
-    const button = document.getElementById("musicButton");
+// Default to playing
+if (localStorage.getItem("musicPlaying") === null) {
+  localStorage.setItem("musicPlaying", "true");
+}
 
-    // Default state = playing
-    if (localStorage.getItem("musicPlaying") === null) {
-      localStorage.setItem("musicPlaying", "true");
-    }
+// Restore playback time
+music.currentTime = localStorage.getItem("musicTime") || 0;
 
-    // Restore position
-    music.currentTime = localStorage.getItem("musicTime") || 0;
+function updateButton() {
+  if (localStorage.getItem("musicPlaying") === "true") {
+    button.textContent = ":)";
+  } else {
+    button.textContent = ":(";
+  }
+}
 
-    function updateButton() {
-      if (localStorage.getItem("musicPlaying") === "true") {
-        button.textContent = ":)";
-      } else {
-        button.textContent = ":(";
-      }
-    }
+function toggleMusic() {
+  if (music.paused) {
+    music.play().catch(() => {});
+    localStorage.setItem("musicPlaying", "true");
+  } else {
+    music.pause();
+    localStorage.setItem("musicPlaying", "false");
+  }
+  updateButton();
+}
 
-    function toggleMusic() {
-      if (localStorage.getItem("musicPlaying") === "true") {
-        music.pause();
-        localStorage.setItem("musicPlaying", "false");
-      } else {
-        music.play().catch(() => {});
-        localStorage.setItem("musicPlaying", "true");
-      }
-      updateButton();
-    }
+button.addEventListener("click", toggleMusic);
 
-    button.addEventListener("click", toggleMusic);
+// This ensures first click anywhere starts the audio
+document.addEventListener("click", function startOnce() {
+  if (localStorage.getItem("musicPlaying") === "true" && music.paused) {
+    music.play().catch(() => {});
+  }
+  document.removeEventListener("click", startOnce);
+});
 
-    // Try autoplay
-    if (localStorage.getItem("musicPlaying") === "true") {
-      music.play().catch(() => {});
-    }
+// Save position on unload
+window.addEventListener("beforeunload", () => {
+  localStorage.setItem("musicTime", music.currentTime);
+});
 
-    updateButton();
-
-    window.addEventListener("beforeunload", () => {
-      localStorage.setItem("musicTime", music.currentTime);
-    });
-
-    // Enable autoplay on first user click for mobile
-    document.addEventListener("click", function enableAudio() {
-      if (localStorage.getItem("musicPlaying") === "true") {
-        music.play().catch(() => {});
-      }
-      document.removeEventListener("click", enableAudio);
-    });
-  </script>
+// Set button state
+updateButton();
+</script>
 
 </body>
 </html>
