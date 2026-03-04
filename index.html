@@ -35,93 +35,64 @@
     
     // Try to start immediately
 music.play().catch(() => {});
-    const musicStateKey = "musicPlaying";
+// iOS requires first interaction to unlock audio
+document.addEventListener("click", function unlockAudio() {
+  if (music.paused) {
+    music.play().catch(() => {});
+  }
+  document.removeEventListener("click", unlockAudio);
+});
 
-    // Always default to ON if not explicitly turned off
-if (localStorage.getItem(musicStateKey) !== "false") {
-  localStorage.setItem(musicStateKey, "true");
+// Toggle for music page
+function toggleMusic() {
+  const btn = document.getElementById("musicButton");
+  if (!btn) return;
+
+  if (music.paused) {
+    music.play();
+    btn.textContent = ":)";
+  } else {
+    music.pause();
+    btn.textContent = ":(";
+  }
 }
-
-    function playMusicIfAllowed() {
-      music.play().catch(() => {});
-    }
-
-    // Toggle music button
-    let musicButton;
-    function createMusicButton() {
-      musicButton = document.createElement("div");
-      musicButton.id = "musicButton";
-      musicButton.className = "page-title";
-      musicButton.style.cursor = "pointer";
-      musicButton.style.textAlign = "center";
-      musicButton.style.marginTop = "50px";
-      updateMusicButton();
-      musicButton.addEventListener("click", toggleMusic);
-    }
-
-    function toggleMusic() {
-      if (music.paused) {
-        playMusicIfAllowed();
-        localStorage.setItem(musicStateKey, "true");
-      } else {
-        music.pause();
-        localStorage.setItem(musicStateKey, "false");
-      }
-      updateMusicButton();
-    }
-
-    function updateMusicButton() {
-      if (!musicButton) return;
-      musicButton.textContent = (localStorage.getItem(musicStateKey) === "true") ? ":)" : ":(";
-    }
-
     // ---- Pages ----
-    const pages = {
-      home: `<div class="center-text">glean</div>`,
-      meditations: `<div class="page-title">meditations</div>`,
-      endeavors: `<div class="page-title">endeavors</div>`,
-      science: `<div class="page-title">science</div>`,
-      music: `<div class="page-title" id="musicButton">:(</div>`
-    };
+const pages = {
+  home: `<div class="center-text">glean</div>`,
+  meditations: `<div class="page-title">meditations</div>`,
+  endeavors: `<div class="page-title">endeavors</div>`,
+  science: `<div class="page-title">science</div>`,
+  music: `<div class="page-title" id="musicButton">:)</div>`
+};
 
-    function loadPage(page) {
-      const contentDiv = document.getElementById("content");
-      contentDiv.innerHTML = pages[page];
+function loadPage(page) {
+  const contentDiv = document.getElementById("content");
+  contentDiv.innerHTML = pages[page];
 
-      // If we loaded music page, attach the button listener
-      if (page === "music") {
-        musicButton = document.getElementById("musicButton");
-        musicButton.addEventListener("click", toggleMusic);
-        updateMusicButton();
-      }
+  // If we loaded music page, attach the button listener
+  if (page === "music") {
+    const btn = document.getElementById("musicButton");
+    btn.addEventListener("click", toggleMusic);
 
-      // Close menu after click
-      document.getElementById('dropdownMenu').classList.remove('show');
-    }
+    // Set correct emoji when page loads
+    btn.textContent = music.paused ? ":(" : ":)";
+  }
 
-    // Menu link clicks
-    document.querySelectorAll(".dropdown-menu a").forEach(link => {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-        const page = link.getAttribute("data-page");
-        loadPage(page);
-      });
-    });
-
-    // Autoplay on first click (Safari/iOS)
-    document.addEventListener("click", function enableAudioOnce() {
-      if (localStorage.getItem(musicStateKey) === "true" && music.paused) {
-        playMusicIfAllowed();
-      }
-      document.removeEventListener("click", enableAudioOnce);
-    });
-
-    // Initial page
-    loadPage("home");
-
-if (localStorage.getItem(musicStateKey) === "true") {
-  playMusicIfAllowed();
+  // Close menu after click
+  document.getElementById('dropdownMenu').classList.remove('show');
 }
+
+// Menu link clicks
+document.querySelectorAll(".dropdown-menu a").forEach(link => {
+  link.addEventListener("click", (e) => {
+    e.preventDefault();
+    const page = link.getAttribute("data-page");
+    loadPage(page);
+  });
+});
+
+// Load initial page
+loadPage("home");
   </script>
 </body>
 </html>
