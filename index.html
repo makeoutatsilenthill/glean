@@ -34,9 +34,10 @@
     const music = document.getElementById("bgMusic");
     const musicStateKey = "musicPlaying";
 
-    if (localStorage.getItem(musicStateKey) === null) {
-      localStorage.setItem(musicStateKey, "true");
-    }
+    // Always default to ON if not explicitly turned off
+if (localStorage.getItem(musicStateKey) !== "false") {
+  localStorage.setItem(musicStateKey, "true");
+}
 
     function playMusicIfAllowed() {
       music.play().catch(() => {});
